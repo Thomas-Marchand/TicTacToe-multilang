@@ -4,15 +4,12 @@ class TicTacToe():
         self.board = [' ' for _ in range(9)]
         self.current_winner = None
     
-    def print_board(self): # print the board with numbers for reference
+    # print a big board with numbers on the right for reference
+    def print_board(self):
         for i in range(3):
-            print('|', end = '')
-            for j in range(3):
-                print(self.board[i*3 + j], end = '|')
-            print("          ", end = '')
-            for j in range(3):
-                print(i*3 + j + 1, end = '|')
-            print()
+            print(' | '.join(self.board[i*3:i*3+3]) + '   ' + ' | '.join(str(x) for x in range(i*3+1, i*3+4)))
+            if i < 2:
+                print('-'*10)
     
     def board_full(self):
         return ' ' not in self.board
@@ -36,13 +33,13 @@ class TicTacToe():
         if player == 'X': # human
             while True: # loop until valid input
                 try:
-                    play_num = int(input("Enter a valid number, " + player + ": "))
+                    play_num = int(input("Enter your move (1-9): "))
                     if play_num in range(1, 10) and self.board[play_num-1] == ' ':
                         return play_num
                     else:
                         raise ValueError
                 except ValueError:
-                    print("Invalid input, try again.")
+                    print("Invalid move.")
 
         else: # bot
             return self.bot_minimax()
@@ -107,7 +104,6 @@ class TicTacToe():
 
     def play_game(self): # main loop
         player = 'X' if self.start == 'X' else 'O'
-        print("initial player:", player)
         while not self.board_full():
             self.print_board()
             print("player",player)
@@ -119,9 +115,9 @@ class TicTacToe():
                 break
         self.print_board()
         if winner:
-            print(winner, "has won!")
+            print(winner, "wins!")
         else:
-            print("no winner!")
+            print("It's a draw!")
 
     
 def main():

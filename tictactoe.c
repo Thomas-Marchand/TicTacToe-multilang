@@ -126,7 +126,6 @@ int bot_minimax(char* board) {
                 return i+1;
             }
             int score = minimax(board, 0, 0);
-            printf("Move %d: %d\n", i+1, score); // debug
             board[i] = ' ';
             if (score > best_score) {
                 best_score = score;
