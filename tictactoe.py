@@ -32,8 +32,9 @@ class TicTacToe():
             return b[4]
     
     def get_move(self, player): # get move from player
-        if player == 'X':
-            while True:
+
+        if player == 'X': # human
+            while True: # loop until valid input
                 try:
                     play_num = int(input("Enter a valid number, " + player + ": "))
                     if play_num in range(1, 10) and self.board[play_num-1] == ' ':
@@ -42,7 +43,8 @@ class TicTacToe():
                         raise ValueError
                 except ValueError:
                     print("Invalid input, try again.")
-        else:
+
+        else: # bot
             return self.bot_minimax()
     
     def bot_random(self): # random bot
@@ -52,30 +54,16 @@ class TicTacToe():
             if self.board[play_num-1] == ' ':
                 return play_num
     
-    def bot_minimax(self): # minimax bot
-        best_score = float('-inf')
-        best_move = None
-        for i in range(9):
-            if self.board[i] == ' ':
-                self.board[i] = 'O'
-                if self.check_winner() == 'O':  # Check for immediate win
-                    self.board[i] = ' '
-                    return i + 1
-                score = self.minimax(self.board, 0, False)
-                self.board[i] = ' '
-                if score > best_score:
-                    best_score = score
-                    best_move = i + 1
-        return best_move
 
     def minimax(self, board, depth, is_maximizing): # minimax algorithm
-        scores = {'X': -1, 'O': 1, 'tie': 0}
-        winner = self.check_winner()
+        scores = {'X': -1, 'O': 1, 'tie': 0} # scores for each player
+        winner = self.check_winner() # check if game is over
         if winner:
             return scores[winner]
         if self.board_full():
             return scores['tie']
-        if is_maximizing:
+
+        if is_maximizing: # bot's turn
             best_score = float('-inf')
             for i in range(9):
                 if board[i] == ' ':
@@ -87,7 +75,8 @@ class TicTacToe():
                     board[i] = ' '
                     best_score = max(score, best_score)
             return best_score
-        else:
+        
+        else: # player's turn
             best_score = float('inf')
             for i in range(9):
                 if board[i] == ' ':
@@ -100,6 +89,22 @@ class TicTacToe():
                     best_score = min(score, best_score)
             return best_score
     
+    def bot_minimax(self): # minimax bot
+        best_score = float('-inf')
+        best_move = None
+        for i in range(9): # loop through all possible moves
+            if self.board[i] == ' ': # check if move is valid
+                self.board[i] = 'O' # make move
+                if self.check_winner() == 'O':  # Check for immediate win
+                    self.board[i] = ' '
+                    return i + 1
+                score = self.minimax(self.board, 0, False) # get score for move
+                self.board[i] = ' ' # undo move
+                if score > best_score: # update best move
+                    best_score = score
+                    best_move = i + 1
+        return best_move
+
     def play_game(self): # main loop
         player = 'X' if self.start == 'X' else 'O'
         print("initial player:", player)
